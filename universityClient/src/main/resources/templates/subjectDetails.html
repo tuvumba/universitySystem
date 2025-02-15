@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>Subject Details</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <script src="/js/subject.js" defer></script>
+</head>
+<body>
+
+<header class="fixed-header">
+    <h1>Subject: <span th:text="${subject.name}">Subject Name</span></h1>
+    <a href="/dashboard">Back to Dashboard</a>
+</header>
+
+<main>
+
+    <div class="foldable-box">
+        <p><strong>Description:</strong> <span th:text="${subject.description}">Subject Description</span></p>
+    </div>
+
+
+    <div class="foldable-box">
+        <div class="foldable-header"><h3>Teachers:</h3></div>
+        <div class="foldable-content">
+            <ul>
+                <li th:each="teacher : ${teachers}">
+                    <a class="subject-link-box" th:href="@{/teachers/{teacherId}(teacherId=${teacher.username})}"
+                       th:text="${teacher.titles} + ' ' + ${teacher.name} + ' ' + ${teacher.surname}"></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div th:if="${isTeacher or isAdmin}">
+        <div class="foldable-box">
+            <div class="foldable-header">
+                <h3>Students:</h3>
+            </div>
+            <div class="foldable-content">
+                <ul id="studentsList">
+                    <li th:each="student : ${students}">
+                        <a class="subject-link-box" th:href="@{/students/{studentId}(studentId=${student.username})}"
+                           th:text="${student.name} + ' ' + ${student.surname}"> </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="foldable-box">
+        <button th:disabled="${isStudying}" th:onclick="'startStudying(' + ${subject.id} + ')'">Start studying</button>
+        <button th:disabled="${!isStudying}" th:onclick="'stopStudying(' + ${subject.id} + ')'">Stop studying</button>
+        <button th:disabled="${!isTeacher or isTeaching}" th:onclick="'startTeaching(' + ${subject.id} + ')'">Start
+            teaching
+        </button>
+        <button th:disabled="${!isTeacher or !isTeaching}" th:onclick="'stopTeaching(' + ${subject.id} + ')'">Stop
+            teaching
+        </button>
+    </div>
+
+
+    <div th:if="${isAdmin}">
+        <div class="foldable-box">
+
+            <div class="foldable-header">
+                <h3>Edit Subject</h3>
+            </div>
+
+            <div class="foldable-content">
+                <form th:action="@{/subject/{id}/update(id=${subject.id})}" method="post">
+                    <label>Name:</label>
+                    <input type="text" name="name" th:value="${subject.name}" required/>
+
+                    <label>Description:</label>
+                    <textarea name="description" required th:text="${subject.description}"></textarea>
+
+                    <button type="submit">Save</button>
+                </form>
+
+                <form th:action="@{/subject/{id}/delete(id=${subject.id})}" method="post">
+                    <button type="submit" onclick="return confirm('Are you sure?')">Delete</button>
+                </form>
+            </div>
+        </div>
+
+
+    </div>
+
+
+</main>
+<div th:replace="~{fragments :: popupScript}"></div>
+</body>
+</html>

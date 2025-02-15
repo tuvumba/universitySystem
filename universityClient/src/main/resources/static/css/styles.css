@@ -1,0 +1,270 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #121212;
+    color: #e0e0e0;
+}
+
+
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    background: #333;
+    color: white;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    padding: 0 30px;
+    justify-content: space-between;
+}
+
+header h1 {
+    font-size: 24px;
+    color: #4a90e2;
+}
+
+header a {
+    color: #4a90e2;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+header a:hover {
+    text-decoration: underline;
+    color: #d1d1d1;
+}
+
+
+main {
+    padding-top: 50px;
+}
+
+
+.search-area {
+    background-color: #2c2c2c;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 800px;
+    margin: 20px auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+.search-bar {
+    width: 250px;
+    padding: 10px;
+    border: 3px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    background-color: #2c2c2c;
+    color: #e0e0e0;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.login-container {
+    margin-top: 80px;
+}
+
+
+.radio-group {
+    display: flex;
+    gap: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.radio-group input[type="radio"] {
+    display: none;
+}
+
+.radio-box {
+    display: inline-block;
+    padding: 10px 10px;
+    border-radius: 8px;
+    border: 2px solid #007bff;
+    background-color: white;
+    color: #007bff;
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 50px;
+}
+
+.radio-box:hover {
+    background-color: #393939;
+    color: white;
+}
+
+.radio-group input[type="radio"]:checked + .radio-box {
+    background-color: #007bff;
+    color: white;
+}
+
+
+button {
+    background-color: #4a90e2;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
+button:hover {
+    background-color: #357ab7;
+}
+
+button:disabled {
+    background-color: #444;
+    color: #888;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+
+.foldable-box {
+    background-color: #2c2c2c;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 800px;
+    margin: 20px auto;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+.foldable-header {
+    cursor: pointer;
+    position: relative;
+    padding-left: 30px;
+}
+
+.foldable-header::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 8px solid white;
+    transition: transform 0.2s ease;
+}
+
+.foldable-header.active::before {
+    transform: translateY(-50%) rotate(180deg);
+}
+
+.foldable-box button {
+    margin-bottom: 15px;
+}
+
+.foldable-content {
+    display: block;
+}
+
+ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+
+.results-container {
+    display: block;
+}
+
+.results-container.hidden {
+    display: none;
+}
+
+
+.subject-link-box {
+    display: inline-block;
+    background-color: #007bff;
+    color: #ffffff;
+    padding: 10px 15px;
+    margin: 8px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.subject-link-box:hover {
+    background-color: #0056b3;
+}
+
+form {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto 10px;
+    padding: 20px;
+    background-color: #333;
+    color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+
+h3 {
+    margin-bottom: 20px;
+    color: #fff;
+}
+
+
+label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    font-size: 1rem;
+    color: #ccc;
+}
+
+
+input[type="text"], textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #555;
+    border-radius: 4px;
+    background-color: #444;
+    color: #fff;
+    font-size: 1rem;
+}
+
+
+textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+
+button[type="submit"]
+
+
+@media (max-width: 768px) {
+    .search-area {
+        padding: 15px;
+    }
+
+    .search-bar {
+        width: 100%;
+    }
+
+    .foldable-box {
+        max-width: 100%;
+    }
+}
+

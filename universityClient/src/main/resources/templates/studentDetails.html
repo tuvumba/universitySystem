@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>Student Details</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <script src="/js/student.js" defer></script>
+</head>
+<body>
+
+<header class="fixed-header">
+    <h1>Student: <span th:text="${student.name} + ' ' + ${student.surname}"></span></h1>
+    <h2>Username: <span th:text="${student.username}"></span></h2>
+    <a href="/dashboard">Back to Dashboard</a>
+</header>
+
+
+<main>
+    <div class="foldable-box">
+        <div class="foldable-header"> <h3>Subjects Enrolled:</h3></div>
+        <div class="foldable-content">
+            <ul>
+                <li th:each="subject : ${subjects}">
+                    <a class="subject-link-box" th:href="@{'/subject/' + ${subject.name}}" th:text="${subject.name}"></a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div th:if="${isAdmin}">
+        <div class="foldable-box">
+            <div class="foldable-header"> <h3>Edit Student</h3> </div>
+
+            <div class="foldable-content">
+                <form th:action="@{'/students/' + ${student.username} + '/update'}" method="post">
+                    <label>Name: <input type="text" name="name" th:value="${student.name}"/></label><br>
+                    <label>Surname: <input type="text" name="surname" th:value="${student.surname}"/></label><br>
+                    <button type="submit">Save Changes</button>
+                </form>
+            <form th:action="@{'/students/' + ${student.username} + '/delete'}" method="post">
+                <button type="submit" onclick="return confirm('Are you sure?')" >Delete Student</button>
+            </form>
+            </div>
+
+        </div>
+
+    </div>
+
+
+</main>
+<div th:replace="~{fragments :: popupScript}"></div>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="">
+<head>
+    <title>Fragments</title>
+</head>
+<body>
+<div th:fragment="popupScript">
+    <script th:inline="javascript">
+        document.addEventListener("DOMContentLoaded", function () {
+            /*[[${errorMessage}]]*/
+            const errorMessage = /*[[${errorMessage}]]*/ '';
+
+            if (errorMessage) {
+                const popup = document.createElement('div');
+                popup.style.position = 'fixed';
+                popup.style.top = '10px';
+                popup.style.right = '10px';
+                popup.style.padding = '10px';
+                popup.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+                popup.style.color = 'white';
+                popup.style.borderRadius = '5px';
+                popup.style.zIndex = '1000';
+                popup.innerText = errorMessage;
+
+                document.body.appendChild(popup);
+
+                setTimeout(function () {
+                    popup.remove();
+                }, 5000);
+            }
+        });
+    </script>
+</div>
+</body>
+</html>

@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: 'postgres:latest'
+    environment:
+      - 'POSTGRES_DB=tjvdb'
+      - 'POSTGRES_USER=postgres'
+      - 'POSTGRES_PASSWORD=1234'
+    ports:
+      - '5433:5433'
+    volumes:
+      - "./src/main/resources/init_scripts:/docker-entrypoint-initdb.d"
+
+  app:
+    build: .
+    ports:
+      - "8081:8081"
+    depends_on:
+      - postgres
+    environment:
+      - 'SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/tjvdb'
+      - 'SPRING_DATASOURCE_USERNAME=postgres'
+      - 'SPRING_DATASOURCE_PASSWORD=1234'
+

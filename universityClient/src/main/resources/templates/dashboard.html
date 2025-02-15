@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <script src="/js/dashboard.js"></script>
+</head>
+<body>
+<header class="fixed-header">
+    <h1>Dashboard</h1>
+    <h2>Welcome back, <span th:text="${username}"></span>!</h2>
+    <h2>The best teacher is: <span th:text="${bestTeacher}">!</span></h2>
+    <a href="/logout">Logout</a>
+</header>
+
+
+<main>
+    <div class="foldable-box">
+        <h2 class="foldable-header active">Subjects you study</h2>
+        <div class="foldable-content" style="display: block;">
+            <div th:each="subject : ${studiedSubjects}">
+                <a class="subject-link-box" th:href="@{/subject/{subjectName}(subjectName=${subject.name})}"
+                   th:text="${subject.name}"></a>
+            </div>
+        </div>
+    </div>
+
+    <div class="foldable-box">
+        <h2 class="foldable-header active">Subjects you teach</h2>
+        <div class="foldable-content" style="display: block;">
+            <div th:each="subject : ${taughtSubjects}">
+                <a class="subject-link-box" th:href="@{/subject/{subjectName}(subjectName=${subject.name})}"
+                   th:text="${subject.name}"></a>
+            </div>
+        </div>
+    </div>
+
+    <div class="search-area">
+        <h3>Search</h3>
+        <form th:action="@{/search}" method="post">
+            <input class="search-bar" type="text" name="query" placeholder="Search..."/>
+
+            <div class="radio-group">
+                <input type="radio" id="subjects" name="category" value="subjects"
+                       th:checked="${category == null or category == 'subjects'}"/>
+                <label for="subjects" class="radio-box">Subjects</label>
+
+                <input type="radio" id="teachers" name="category" value="teachers"
+                       th:checked="${category == 'teachers'}"/>
+                <label for="teachers" class="radio-box">Teachers</label>
+
+                <input type="radio" id="students" name="category" value="students"
+                       th:checked="${category == 'students'}"
+                       th:disabled="${not (isAdmin or isTeacher)}"/>
+                <label for="students" class="radio-box">Students</label>
+            </div>
+
+            <h3>Search Limit</h3>
+            <div class="radio-group">
+                <input type="radio" id="limit5" name="limit" value="5" th:checked="${limit == null or limit == 5}"/>
+                <label for="limit5" class="radio-box">5</label>
+
+                <input type="radio" id="limit10" name="limit" value="10" th:checked="${limit == 10}"/>
+                <label for="limit10" class="radio-box">10</label>
+
+                <input type="radio" id="limit15" name="limit" value="15" th:checked="${limit == 15}"/>
+                <label for="limit15" class="radio-box">15</label>
+
+                <input type="radio" id="limit25" name="limit" value="25" th:checked="${limit == 25}"/>
+                <label for="limit25" class="radio-box">25</label>
+
+                <input type="radio" id="limitAll" name="limit" value="100000" th:checked="${limit == 100000}"/>
+                <label for="limitAll" class="radio-box">All</label>
+            </div>
+
+
+            <button type="submit">Search</button>
+        </form>
+    </div>
+
+
+    <div th:if="${searchResults}" class="results-container" style="display: block;">
+        <div class="foldable-box">
+            <h3 class="foldable-header">Search Results</h3>
+            <div class="foldable-content">
+                <ul>
+                    <li th:each="result : ${searchResults}">
+      <span th:switch="${category}">
+        <span th:case="'subjects'">
+          <a class="subject-link-box" th:href="@{/subject/{subjectName}(subjectName=${result.name})}"
+             th:text="${result.name}"></a>
+        </span>
+        <span th:case="'teachers'">
+          <a class="subject-link-box" th:href="@{/teachers/{username}(username=${result.username})}"
+             th:text="${result.titles} + ' ' + ${result.name} + ' ' + ${result.surname}"></a>
+        </span>
+        <span th:case="'students'">
+          <a class="subject-link-box" th:href="@{/students/{username}(username=${result.username})}"
+             th:text="${result.name} + ' ' + ${result.surname}"></a>
+        </span>
+      </span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+    <div th:if="${isAdmin}">
+        <div class="foldable-box">
+            <div class="foldable-header"><h2>Admin Actions</h2></div>
+            <div class="foldable-content">
+                <button onclick="toggleForm('createSubjectForm')">Create Subject</button>
+                <button onclick="toggleForm('createTeacherForm')">Create Teacher</button>
+                <button onclick="toggleForm('createStudentForm')">Create Student</button>
+
+                <div class="edit-form">
+                    <div id="createSubjectForm" style="display: none;">
+                        <h3>Create Subject</h3>
+                        <form th:action="@{/subjects/create}" method="post" id="subjectForm"
+                              onsubmit="return validateForm('subjectForm')">
+                            <div>
+                                <label for="subjectName">Name:</label>
+                                <input type="text" id="subjectName" name="subjectName" placeholder="Enter subject name"
+                                       required>
+                            </div>
+                            <br/>
+                            <div>
+                                <label for="description">Description:</label>
+                                <textarea id="description" name="description" placeholder="Enter subject description"
+                                          required></textarea>
+                            </div>
+                            <button type="submit">Save</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="edit-form">
+                    <div id="createTeacherForm" style="display: none;">
+                        <h3>Create Teacher</h3>
+                        <form th:action="@{/teachers/create}" method="post" id="teacherForm"
+                              onsubmit="return validateForm('teacherForm')">
+                            <label for="teacherUsername">Username:</label>
+                            <input type="text" name="username" id="teacherUsername" required/><br/>
+                            <label for="teacherName">Name:</label>
+                            <input type="text" name="name" id="teacherName" required/><br/>
+                            <label for="teacherSurname">Surname:</label>
+                            <input type="text" name="surname" id="teacherSurname" required/><br/>
+                            <label for="teacherTitles">Titles:</label>
+                            <input type="text" name="titles" id="teacherTitles"/><br/>
+                            <button type="submit">Create Teacher</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="edit-form">
+                    <div id="createStudentForm" style="display: none;">
+                        <h3>Create Student</h3>
+                        <form th:action="@{/students/create}" method="post" id="studentForm"
+                              onsubmit="return validateForm('studentForm')">
+                            <label for="studentUsername">Username:</label>
+                            <input type="text" name="username" id="studentUsername" required/><br/>
+                            <label for="studentName">Name:</label>
+                            <input type="text" name="name" id="studentName" required/><br/>
+                            <label for="studentSurname">Surname:</label>
+                            <input type="text" name="surname" id="studentSurname" required/><br/>
+                            <button type="submit">Create Student</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+
+    <div th:if="${errorMessage}">
+        <p style="color: red;" th:text="${error}"></p>
+    </div>
+
+    <div th:replace="~{fragments :: popupScript}"></div>
+</main>
+</body>
+</html>
